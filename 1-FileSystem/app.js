@@ -18,6 +18,10 @@ switch (comando) {
                 console.log('Error:', err);
             })
         break;
+    case 'cargar':
+        // Crear archivo de multiplicación
+        multiplicar.cargarDB();
+        break;
     default:
         console.log('Comando no reconocido');
         return false;

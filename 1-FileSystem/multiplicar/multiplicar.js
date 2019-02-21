@@ -34,7 +34,23 @@ let crearArchivo = (base, limite = 10) => {
     });
 }
 
+
+const cargarDB = () => {
+    try {
+        mostrarData = require('../tablas/data.json');
+        console.log(mostrarData);
+        // return listadoPorHacer;
+    } catch {
+        mostrarData = [];
+        console.log(mostrarData);
+        // return listadoPorHacer;
+    }
+
+
+}
+
 module.exports = {
     crearArchivo,
-    listarTabla
+    listarTabla,
+    cargarDB
 }
