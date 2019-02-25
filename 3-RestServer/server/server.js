@@ -1,45 +1,30 @@
-require('./config/config');
-
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-// parse application/x-www-form-urlencoded
+// Cargar rutas
+var usuario_routes = require('../routes/http/usuario.route');
+
+// Middleware: Antes de recibir http se lanza lo que le indiquemos aquí.
+// Método que se ejecuta antes de que llegue a un controlador. 
+// Recibe datos por método HTTP.
+// Convierte datos recibidos en petición a objeto JSON, a un objeto javascript listo para usar.
 app.use(bodyParser.urlencoded({ extended: false }));
-// parse application/json
 app.use(bodyParser.json());
+//
 
+// Al crear nuestro cliente (Frontend) que tire del API puede dar problemas con el CORS, cruzado de dominios, ...
+// Middleware propio para solucionar este problema.
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
 
-
-// Consultar usuario
-app.get('/usuario', function(req, res) {
-    res.json('get Usuario');
+    next();
 });
 
-// Alta de usuario
-app.post('/usuario', function(req, res) {
-    let body = req.body;
-    if (body.nombre === undefined) {
-        return res.status(400).json({ respuesta: 'El nombre es obligatorio.' });
-    }
+// Rutas
+app.use('/api', usuario_routes);
 
-    res.json({ body });
-});
-
-// Editar usuario
-app.put('/usuario/:id', function(req, res) {
-    let id = req.params.id;
-
-    res.json({ id, action: 'put' });
-});
-
-// Eliminar usuario
-app.delete('/usuario/:id', function(req, res) {
-    let id = req.params.id;
-
-    res.json({ id, action: 'delete' });
-});
-
-app.listen(process.env.PORT, () => {
-    console.log('Escuchando puerto 3000 para Express.');
-})
+module.exports = app;
