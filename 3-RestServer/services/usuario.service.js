@@ -13,7 +13,7 @@ var ControlException = require('../utils/ControlException');
  * Consultar todos los empleados.
  */
 function getUsuarios() {
-    let usuarios = Usuarios.findAll({
+    let usuarios = Usuarios.findAll({ attributes: ['id', 'rol', 'nombre', 'apellidos', 'email', 'imagen', 'enabled'] }, {
             order: [
                 ['apellidos', 'ASC'],
                 ['nombre', 'ASC']
@@ -31,13 +31,14 @@ function getUsuarios() {
  * Recoger datos de un usuario
  */
 async function getUsuario(id) {
-    let usuario = await Usuarios.findById(id)
+    let usuario = await Usuarios.findOne({ where: { id: id } })
         .catch(error => {
             console.log(error);
             throw new ControlException('Ha ocurrido un error al consultar el usuario.', 500);
         });
 
     if (usuario) {
+        usuario.password = undefined;
         return usuario;
     } else {
         throw new ControlException('El usuario no ha sido encontrado.', 500);
@@ -47,8 +48,8 @@ async function getUsuario(id) {
 /**
  * Recoger datos de un usuario
  */
-function getUsuarioByEmail(email) {
-    let usuario = Usuarios.findAll({ where: { email: email } })
+async function getUsuarioByEmail(email) {
+    let usuario = await Usuarios.findOne({ where: { email: email } })
         .catch(error => {
             console.log(error);
             throw new ControlException('Ha ocurrido un error al consultar el usuario.', 500);
@@ -90,7 +91,16 @@ async function addUsuario(nuevoUsuario, t) {
  * Editar un usuario
  */
 async function updUsuario(editUsuario, t) {
-    const usuario = await getUsuario(editUsuario.id);
+    console.log('Edit usuario');
+    let usuario = await Usuarios.findOne({ where: { id: editUsuario.id } })
+        .catch(error => {
+            console.log(error);
+            throw new ControlException('Ha ocurrido un error al consultar el usuario.', 500);
+        });
+
+    if (!usuario) {
+        throw new ControlException('El usuario no ha sido encontrado.', 500);
+    }
 
     if (usuario.email !== editUsuario.email) {
         const usuarioEmail = await getUsuarioByEmail(editUsuario.email);
@@ -103,9 +113,11 @@ async function updUsuario(editUsuario, t) {
     usuario.nombre = editUsuario.nombre;
     usuario.apellidos = editUsuario.apellidos;
     usuario.rol = editUsuario.rol;
-    usuario.password = bcrypt.hashSync(editUsuario.password, saltRounds);
+    // usuario.password = bcrypt.hashSync(editUsuario.password, saltRounds);
     usuario.email = editUsuario.email;
     usuario.enabled = editUsuario.enabled;
+
+    console.log(usuario.email);
 
     const usuarioEdit = await usuario.save({ transaction: t })
         .catch(error => {

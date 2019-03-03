@@ -2,7 +2,11 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
+// En el archivo config se definen variables globales (variables de entorno) que se usan en la app.
+require('../config/config');
+
 // Cargar rutas
+var login_routes = require('../routes/http/login.route');
 var usuario_routes = require('../routes/http/usuario.route');
 
 // Middleware: Antes de recibir http se lanza lo que le indiquemos aquí.
@@ -25,6 +29,7 @@ app.use(function(req, res, next) {
 });
 
 // Rutas
+app.use('/api', login_routes);
 app.use('/api', usuario_routes);
 
 module.exports = app;

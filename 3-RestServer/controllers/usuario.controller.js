@@ -89,7 +89,6 @@ async function updUsuario(req, res) {
         nombre: body.nombre,
         apellidos: body.apellidos,
         rol: body.rol,
-        password: body.password,
         enabled: body.enabled
     };
 
