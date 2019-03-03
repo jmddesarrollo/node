@@ -34,7 +34,7 @@ async function loginUser(userLogin) {
     usuario.password = undefined;
 
     // Crear token: objeto, contraseña secreta general de encriptación, tiempo de expiración en sg. (4h)
-    var token = jwt.sign({ usuario: usuario }, process.env.SEED, { expiresIn: 60 * 60 * 24 * 7 });
+    var token = jwt.sign({ usuario: usuario }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
 
     let data = new Object;
     data.usuario = usuario;
@@ -48,7 +48,7 @@ async function loginUser(userLogin) {
 // =====================================
 function renovarToken(req) {
 
-    var token = jwt.sign({ usuario: req.usuario }, process.env.SEED, { expiresIn: 60 * 60 * 24 * 7 });
+    var token = jwt.sign({ usuario: req.usuario }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
 
     return token;
 }

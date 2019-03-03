@@ -13,7 +13,7 @@ async function getUsuarios(req, res) {
     try {
         let usuarios = await UsuarioService.getUsuarios();
 
-        res.status(200).send({ status: 'success', data: usuarios });
+        res.status(200).send({ status: 'success', data: usuarios, message: "Consulta de usuarios realizada correctamente." });
     } catch (error) {
         if (error instanceof ControlException) {
             res.status(error.code).send({ status: 'error', message: error.message });
@@ -32,7 +32,7 @@ async function getUsuario(req, res) {
     try {
         let usuario = await UsuarioService.getUsuario(id);
 
-        res.status(200).send({ status: 'success', data: usuario });
+        res.status(200).send({ status: 'success', data: usuario, message: "Consulta de usuario realizada correctamente." });
     } catch (error) {
         if (error instanceof ControlException) {
             res.status(error.code).send({ status: 'error', message: error.message });
@@ -64,7 +64,7 @@ async function addUsuario(req, res) {
         let usuario = await UsuarioService.addUsuario(nuevoUsuario, t);
         await t.commit();
 
-        res.status(200).send({ status: 'success', data: usuario });
+        res.status(200).send({ status: 'success', data: usuario, message: "Alta de usuario realizada correctamente." });
     } catch (error) {
         await t.rollback();
 
@@ -99,7 +99,7 @@ async function updUsuario(req, res) {
         let usuario = await UsuarioService.updUsuario(editUsuario, t);
         await t.commit();
 
-        res.status(200).send({ status: 'success', data: usuario });
+        res.status(200).send({ status: 'success', data: usuario, message: "Edición de usuario realizada correctamente." });
     } catch (error) {
         await t.rollback();
 
@@ -114,6 +114,37 @@ async function updUsuario(req, res) {
 /*
  * Editar un usuario
  */
+async function updPasswordUsuario(req, res) {
+    const id = req.params.id;
+    const body = req.body;
+
+    const editUsuario = {
+        id: id,
+        password: body.password
+    };
+
+    // Iniciar transacción
+    let t = await Sequelize.transaction();
+
+    try {
+        let usuario = await UsuarioService.updPasswordUsuario(editUsuario, t);
+        await t.commit();
+
+        res.status(200).send({ status: 'success', data: usuario, message: "Edición de contraseña realizada correctamente." });
+    } catch (error) {
+        await t.rollback();
+
+        if (error instanceof ControlException) {
+            res.status(error.code).send({ status: 'error', message: error.message });
+        } else {
+            res.status(500).send({ status: 'error', message: 'Error no controlado.' });
+        }
+    }
+}
+
+/*
+ * Eliminar un usuario
+ */
 async function delUsuario(req, res) {
     const id = req.params.id;
 
@@ -124,7 +155,7 @@ async function delUsuario(req, res) {
         let usuario = await UsuarioService.delUsuario(id, t);
         await t.commit();
 
-        res.status(200).send({ status: 'success', data: usuario });
+        res.status(200).send({ status: 'success', data: usuario, message: "Eliminación de usuario realizada correctamente." });
     } catch (error) {
         await t.rollback();
 
@@ -141,5 +172,6 @@ module.exports = {
     getUsuario,
     addUsuario,
     updUsuario,
+    updPasswordUsuario,
     delUsuario
 }

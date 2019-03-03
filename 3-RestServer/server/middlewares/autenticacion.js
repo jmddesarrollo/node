@@ -23,6 +23,22 @@ var verificarToken = (req, res, next) => {
 }
 
 // =====================================
+// Informar datos del token - Middleware
+// =====================================
+var infoToken = (req, res, next) => {
+
+    var token = req.get('token');
+
+    jwt.verify(token, process.env.SEED, (err, decoded) => {
+        if (!err) {
+            req.usuario = decoded.usuario;
+        }
+    });
+
+    next();
+}
+
+// =====================================
 // Verificar Administrador - Middleware
 // =====================================
 var verificarAdmin = function(req, res, next) {
@@ -39,9 +55,8 @@ var verificarAdmin = function(req, res, next) {
 // Verificar Administrador - Middleware
 // =====================================
 var verificarAdminOrEqualUsuario = function(req, res, next) {
-
     // En req.usuario tenemos datos del token traídos del middleware 'verificar token'
-    if (req.usuario.rol === "ROLE_ADMIN" || req.usuario.id === req.params.id) {
+    if (req.usuario.rol === "ROLE_ADMIN" || req.usuario.id == req.params.id) {
         next();
         return true;
     } else {
@@ -51,6 +66,7 @@ var verificarAdminOrEqualUsuario = function(req, res, next) {
 
 module.exports = {
     verificarToken,
+    infoToken,
     verificarAdmin,
     verificarAdminOrEqualUsuario
 }
