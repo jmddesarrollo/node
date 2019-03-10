@@ -21,7 +21,7 @@ function getUsuarios() {
         })
         .catch(error => {
             console.log(error);
-            throw new ControlException('Ha ocurrido un error al consultar los empleados.', 500);
+            throw new ControlException('Ha ocurrido un error al consultar los usuarios.', 500);
         });
 
     return usuarios;
@@ -78,7 +78,7 @@ async function addUsuario(nuevoUsuario, t) {
         }, { transaction: t })
         .catch(error => {
             console.log(error);
-            throw new ControlException('Revisar datos introduciods. Se ha producido un error al añadir el usuario.', 500);
+            throw new ControlException('Revisar datos introducidos. Se ha producido un error al añadir el usuario.', 500);
         });
 
     // No mostrar la password en la salida de la petición.
@@ -91,7 +91,6 @@ async function addUsuario(nuevoUsuario, t) {
  * Editar un usuario
  */
 async function updUsuario(editUsuario, t) {
-    console.log('Edit usuario');
     let usuario = await Usuarios.findOne({ where: { id: editUsuario.id } })
         .catch(error => {
             console.log(error);
@@ -113,22 +112,74 @@ async function updUsuario(editUsuario, t) {
     usuario.nombre = editUsuario.nombre;
     usuario.apellidos = editUsuario.apellidos;
     usuario.rol = editUsuario.rol;
-    // usuario.password = bcrypt.hashSync(editUsuario.password, saltRounds);
     usuario.email = editUsuario.email;
     usuario.enabled = editUsuario.enabled;
-
-    console.log(usuario.email);
 
     const usuarioEdit = await usuario.save({ transaction: t })
         .catch(error => {
             console.log(error);
-            throw new ControlException('Revisar datos introduciods. Se ha producido un error al añadir el usuario.', 500);
+            throw new ControlException('Revisar datos introducidos. Se ha producido un error al editar el usuario.', 500);
         });
 
     // No mostrar la password en la salida de la petición.
     usuarioEdit.password = undefined;
 
     return usuarioEdit;
+}
+
+/*
+ * Editar un usuario
+ */
+async function updPasswordUsuario(editUsuario, t) {
+    let usuario = await Usuarios.findOne({ where: { id: editUsuario.id } })
+        .catch(error => {
+            console.log(error);
+            throw new ControlException('Ha ocurrido un error al consultar el usuario.', 500);
+        });
+
+    if (!usuario) {
+        throw new ControlException('El usuario no ha sido encontrado.', 500);
+    }
+
+    usuario.password = bcrypt.hashSync(editUsuario.password, saltRounds);
+
+    const usuarioEdit = await usuario.save({ transaction: t })
+        .catch(error => {
+            console.log(error);
+            throw new ControlException('Revisar datos introducidos. Se ha producido un error al editar el usuario.', 500);
+        });
+
+    // No mostrar la password en la salida de la petición.
+    usuarioEdit.password = undefined;
+
+    return usuarioEdit;
+}
+
+/*
+ * Editar imagen de un usuario
+ */
+async function updImagenUsuario(id, nombreImg) {
+    let usuario = await Usuarios.findOne({ where: { id: id } })
+        .catch(error => {
+            console.log(error);
+            throw new ControlException('Ha ocurrido un error al consultar el usuario.', 500);
+        });
+
+    if (!usuario) {
+        throw new ControlException('El usuario no ha sido encontrado.', 500);
+    }
+
+    const imgAntigua = usuario.imagen;
+
+    usuario.imagen = nombreImg;
+
+    await usuario.save()
+        .catch(error => {
+            console.log(error);
+            throw new ControlException('Revisar imagen introducida. Se ha producido un error al editar el usuario.', 500);
+        });
+
+    return imgAntigua;
 }
 
 /*
@@ -157,5 +208,7 @@ module.exports = {
     getUsuarioByEmail,
     addUsuario,
     updUsuario,
+    updPasswordUsuario,
+    updImagenUsuario,
     delUsuario
 }

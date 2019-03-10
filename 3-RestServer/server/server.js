@@ -1,13 +1,20 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const path = require('path');
 
 // En el archivo config se definen variables globales (variables de entorno) que se usan en la app.
 require('../config/config');
 
+// Recoge el archivo que se está subiendo y lo coloca en req.files.
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
+
 // Cargar rutas
 var login_routes = require('../routes/http/login.route');
 var usuario_routes = require('../routes/http/usuario.route');
+var rutas_routes = require('../routes/http/rutas.route');
+var upload_routes = require('../routes/http/upload.route');
 
 // Middleware: Antes de recibir http se lanza lo que le indiquemos aquí.
 // Método que se ejecuta antes de que llegue a un controlador. 
@@ -28,8 +35,13 @@ app.use(function(req, res, next) {
     next();
 });
 
+// Habilitar la carpeta public
+app.use(express.static(path.resolve(__dirname, '../public')));
+
 // Rutas
 app.use('/api', login_routes);
 app.use('/api', usuario_routes);
+app.use('/api', rutas_routes);
+app.use('/api', upload_routes);
 
 module.exports = app;
