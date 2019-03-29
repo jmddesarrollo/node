@@ -18,6 +18,8 @@ socket.on('connect', () => {
 
     socket.emit('entrarChat', usuario, (data) => {
         console.log('Usuarios conectados', data);
+        renderUsuarios(data);
+        renderSmallChat();
     });
 });
 
@@ -26,22 +28,16 @@ socket.on('disconnect', () => {
     console.log('Desconexión con el servidor');
 });
 
-// Enviar información
-// socket.emit('enviarMensaje', {
-//     usuario: 'JMD',
-//     mensaje: 'Hola!'
-// }, (data) => {
-//     console.log('Se disparó el callback');
-//     console.log('Respuesta del servidor: ', data.respuesta);
-// });
-
 socket.on('crearMensaje', (data) => {
     console.log('Servidor: ', data);
+    renderMensajes(data, false);
+    scrollBottom();
 });
 
 // Escuchar conexiones de usuarios al chat
 socket.on('listaPersonas', (data) => {
     console.log(data);
+    renderUsuarios(data);
 });
 
 // Mensajes privados

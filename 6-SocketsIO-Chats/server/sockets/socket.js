@@ -26,17 +26,20 @@ io.on('connection', (client) => {
         // client.broadcast.emit('listaPersonas', usuarios.getPersonas());
         // Manda mensaje a los usuarios conectados a mismo chat.
         client.broadcast.to(data.sala).emit('listaPersonas', usuarios.getPersonasPorSala(data.sala));
+        client.broadcast.to(data.sala).emit('crearMensaje', crearMensaje('Administrador', `${data.nombre} se ha conectado al chat.`));
 
         callback(usuarios.getPersonasPorSala(data.sala));
     });
 
-    client.on('crearMensaje', (data) => {
+    client.on('crearMensaje', (data, callback) => {
         let persona = usuarios.getPersona(client.id);
         let mensaje = crearMensaje(persona.nombre, data.mensaje);
         // Manda mensaje a todos los usuarios conectados al chat
-        client.broadcast.emit('crearMensaje', mensaje);
+        // client.broadcast.emit('crearMensaje', mensaje);
         // Manda mensaje a los usuarios conectados a mismo chat.
         client.broadcast.to(persona.sala).emit('crearMensaje', mensaje);
+
+        callback(mensaje);
     });
 
     client.on('mensajePrivado', (data) => {
