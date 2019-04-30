@@ -1,6 +1,9 @@
 # node
 Practicas con Node
 
+00-Metodos
+Base sobre callback, promise y async-await.
+
 01-Filesystem
 Practicas con FS, yargs y colors. Ejercicio de Tabla de multiplicar.
 
