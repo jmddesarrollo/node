@@ -16,7 +16,7 @@ let listarTabla = (base, limite = 10) => {
 let crearArchivo = (base, limite = 10) => {
     return new Promise((resolve, reject) => {
         if (!Number(base)) {
-            reject(`El valor "${base}" no es un número`);
+            reject(`El valor "${base}" no es un número.`);
             return false;
         }
 
@@ -27,6 +27,12 @@ let crearArchivo = (base, limite = 10) => {
         }
 
         // const data = new Uint8Array(Buffer.from('Hello Node.js'));
+        /**
+         * WriteFile de FS
+         *  - Dirección y archivo donde almacenar información
+         *  - Variable con el contenido a almacenar
+         *  - Callback: En cuyo interior se gestiona la resolución de la Promesa 'crearArchivo'.
+         */
         fs.writeFile(`./tablas/tabla-${base}.txt`, data, (err) => {
             if (err) reject(err)
             else resolve(data);
@@ -49,6 +55,7 @@ const cargarDB = () => {
 
 }
 
+// Module es una variable de entorno que posee una propiedad objeto exports.
 module.exports = {
     crearArchivo,
     listarTabla,

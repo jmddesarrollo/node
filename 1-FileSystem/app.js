@@ -2,6 +2,7 @@ const multiplicar = require('./multiplicar/multiplicar');
 const argv = require('./config/yargs').argv;
 const colors = require('colors/safe');
 
+// En '_' aparece un arreglo con las acciones.
 let comando = argv._[0];
 
 switch (comando) {
