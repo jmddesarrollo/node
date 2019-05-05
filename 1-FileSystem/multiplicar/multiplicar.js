@@ -43,16 +43,16 @@ let crearArchivo = (base, limite = 10) => {
 
 const cargarDB = () => {
     try {
+        // Leer un archivo. al estar en lenguaje servidor con un 'require' es suficiente, al detectar
+        // que es un json, directamente lo serializa y lo convierte en un objeto javascript.
         mostrarData = require('../tablas/data.json');
-        console.log(mostrarData);
-        // return listadoPorHacer;
+        // console.log(mostrarData);
+        return mostrarData;
     } catch {
         mostrarData = [];
-        console.log(mostrarData);
-        // return listadoPorHacer;
+        // console.log(mostrarData);
+        return mostrarData;
     }
-
-
 }
 
 // Module es una variable de entorno que posee una propiedad objeto exports.

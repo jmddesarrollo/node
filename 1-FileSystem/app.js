@@ -23,6 +23,18 @@ switch (comando) {
         // Crear archivo de multiplicación
         multiplicar.cargarDB();
         break;
+
+    case 'json':
+        let data = multiplicar.cargarDB();
+
+        for (let tarea of data) {
+            console.log('===== TABLA ====='.green);
+            console.log(tarea.descripcion);
+            console.log('Estado: ', tarea.completado);
+            console.log('================='.green);
+        }
+        break;
+
     default:
         console.log('Comando no reconocido');
         return false;
@@ -36,4 +48,4 @@ switch (comando) {
 // base = parametro.split('=')[1];
 // console.log(base);
 
-console.log(argv);
+// console.log(argv);
