@@ -16,6 +16,9 @@ const opciones = {
     }
 }
 
+// Posibilidad con yargs de recoger opciones sin comando
+// const argv = require('yargs).options({direccion:{alias: 'd', demand: true, desc: 'Opciones'}}).argv;
+
 const argv = require('yargs')
     .command('listar', 'Imprime en consola la tabla de multiplicar.', opciones)
     .command('crear', 'Crear archivo con la tabla de multiplicar.', opciones)
