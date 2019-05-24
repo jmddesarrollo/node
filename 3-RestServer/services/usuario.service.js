@@ -20,7 +20,6 @@ function getUsuarios() {
             ]
         })
         .catch(error => {
-            console.log(error);
             throw new ControlException('Ha ocurrido un error al consultar los usuarios.', 500);
         });
 
@@ -33,7 +32,6 @@ function getUsuarios() {
 async function getUsuario(id) {
     let usuario = await Usuarios.findOne({ where: { id: id } })
         .catch(error => {
-            console.log(error);
             throw new ControlException('Ha ocurrido un error al consultar el usuario.', 500);
         });
 
@@ -51,7 +49,6 @@ async function getUsuario(id) {
 async function getUsuarioByEmail(email) {
     let usuario = await Usuarios.findOne({ where: { email: email } })
         .catch(error => {
-            console.log(error);
             throw new ControlException('Ha ocurrido un error al consultar el usuario.', 500);
         });
 
@@ -64,7 +61,7 @@ async function getUsuarioByEmail(email) {
 async function addUsuario(nuevoUsuario, t) {
     const usuario = await getUsuarioByEmail(nuevoUsuario.email);
 
-    if (usuario.length > 0) {
+    if (usuario) {
         throw new ControlException('El email introducido ya se encuentra dado de alta.', 500);
     }
 
@@ -77,7 +74,6 @@ async function addUsuario(nuevoUsuario, t) {
             imagen: null
         }, { transaction: t })
         .catch(error => {
-            console.log(error);
             throw new ControlException('Revisar datos introducidos. Se ha producido un error al añadir el usuario.', 500);
         });
 
@@ -93,7 +89,6 @@ async function addUsuario(nuevoUsuario, t) {
 async function updUsuario(editUsuario, t) {
     let usuario = await Usuarios.findOne({ where: { id: editUsuario.id } })
         .catch(error => {
-            console.log(error);
             throw new ControlException('Ha ocurrido un error al consultar el usuario.', 500);
         });
 
@@ -117,7 +112,6 @@ async function updUsuario(editUsuario, t) {
 
     const usuarioEdit = await usuario.save({ transaction: t })
         .catch(error => {
-            console.log(error);
             throw new ControlException('Revisar datos introducidos. Se ha producido un error al editar el usuario.', 500);
         });
 
@@ -133,7 +127,6 @@ async function updUsuario(editUsuario, t) {
 async function updPasswordUsuario(editUsuario, t) {
     let usuario = await Usuarios.findOne({ where: { id: editUsuario.id } })
         .catch(error => {
-            console.log(error);
             throw new ControlException('Ha ocurrido un error al consultar el usuario.', 500);
         });
 
@@ -145,7 +138,6 @@ async function updPasswordUsuario(editUsuario, t) {
 
     const usuarioEdit = await usuario.save({ transaction: t })
         .catch(error => {
-            console.log(error);
             throw new ControlException('Revisar datos introducidos. Se ha producido un error al editar el usuario.', 500);
         });
 
@@ -161,7 +153,6 @@ async function updPasswordUsuario(editUsuario, t) {
 async function updImagenUsuario(id, nombreImg) {
     let usuario = await Usuarios.findOne({ where: { id: id } })
         .catch(error => {
-            console.log(error);
             throw new ControlException('Ha ocurrido un error al consultar el usuario.', 500);
         });
 
@@ -175,7 +166,6 @@ async function updImagenUsuario(id, nombreImg) {
 
     await usuario.save()
         .catch(error => {
-            console.log(error);
             throw new ControlException('Revisar imagen introducida. Se ha producido un error al editar el usuario.', 500);
         });
 
@@ -192,7 +182,6 @@ async function delUsuario(id, t) {
 
     const usuarioDel = await usuario.save({ transaction: t })
         .catch(error => {
-            console.log(error);
             throw new ControlException('Revisar datos introduciods. Se ha producido un error al añadir el usuario.', 500);
         });
 

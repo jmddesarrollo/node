@@ -12,7 +12,7 @@ socket.on('disconnect', (client) => {
 var searchParams = new URLSearchParams(window.location.search);
 var label = $('small');
 
-if (!searchParams.has) {
+if (!searchParams.has('escritorio')) {
     window.location = 'index.html';
     throw new Error('El escritorio es necesario.');
 }

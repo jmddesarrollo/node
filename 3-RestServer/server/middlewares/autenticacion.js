@@ -9,7 +9,6 @@ var verificarToken = (req, res, next) => {
 
     jwt.verify(token, process.env.SEED, (err, decoded) => {
         if (err) {
-            console.log(err);
             if (err.name && err.name === 'TokenExpiredError') {
                 return res.status(401).json({ status: 'error', mensaje: 'Tiempo de conexión expirado.', errors: err });
             } else {
